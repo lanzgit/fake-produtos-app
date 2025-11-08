@@ -1,6 +1,7 @@
 "use client";
 
 import { Produto } from "@/app/types/produto";
+import { useRouter } from "next/navigation";
 
 interface ProdutoTableProps {
   readonly produtos: Produto[];
@@ -13,6 +14,8 @@ export function ProdutoTable({
   onEdit,
   onDelete,
 }: ProdutoTableProps) {
+  const router = useRouter();
+
   return (
     <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-black text-2xl font-bold mb-6 text-center">Lista de Produtos</h2>
@@ -36,9 +39,10 @@ export function ProdutoTable({
               {produtos.map((produto, index) => (
                 <tr
                   key={produto.id}
-                  className={`text-black border-b border-gray-200 hover:bg-gray-50 transition-colors ${
+                  className={`text-black border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer ${
                     index % 2 === 0 ? "bg-gray-100" : "bg-white"
                   }`}
+                  onClick={() => router.push(`/produtos/${produto.id}`)}
                 >
                   <td className="px-4 py-2">{produto.id}</td>
                   <td className="px-4 py-2">{produto.titulo}</td>
@@ -56,13 +60,19 @@ export function ProdutoTable({
                     <div className="flex gap-2 justify-center">
                       <button
                         className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
-                        onClick={() => onEdit(produto)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEdit(produto);
+                        }}
                       >
                         E
                       </button>
                       <button
                         className="bg-red-500 hover:bg-red-700 text-white font-semibold py-1.5 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-sm"
-                        onClick={() => onDelete(produto.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(produto.id);
+                        }}
                       >
                         D
                       </button>
